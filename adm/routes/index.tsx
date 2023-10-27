@@ -8,8 +8,8 @@ import CategoryPage from "../src/pages/Category";
 
 
 const router = createBrowserRouter([
-    {path: '/', element: <Home/>, errorElement: <NotFoundPage />},
-    {path: '/admin', element: <Login/>},
+    {path: '/home', element: <Home/>, errorElement: <NotFoundPage />},
+    {path: '/', element: <Login/>, errorElement: <NotFoundPage />},
     {path: '/produtos', element: <ProductPage/>},
     {path: '/categoria', element: <CategoryPage/>},
 
