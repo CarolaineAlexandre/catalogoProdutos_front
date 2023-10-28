@@ -1,8 +1,8 @@
 // src/App.tsx
 import React, { useState } from 'react';
 import { Box, Button, ChakraProvider, extendTheme, Input, Stack } from '@chakra-ui/react';
-import CategoryList from './../../components/EditCategory/CategoryList/index';
-import CategoryForm from './../../components/EditCategory/CategoryForm/index';
+import CategoryList from './../../components/CategoryList/index';
+import CategoryForm from './../../components/CategoryForm/index';
 import LayoutProps from '../../components/Layout';
 
 const theme = extendTheme({
