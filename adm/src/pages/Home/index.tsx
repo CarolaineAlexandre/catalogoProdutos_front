@@ -11,7 +11,7 @@ export default function Home(){
             <Center>
             <Flex m={'10px'}>
             <Products />
-             <Promotions />
+             {/* <Promotions /> */}
             <Category />
             </Flex>
             </Center>
