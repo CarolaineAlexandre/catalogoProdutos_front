@@ -20,7 +20,7 @@ import {
   const Links = [
       {href: '/', texto: 'Home'},
       {href: '/produtos', texto: 'Produtos'},
-      {href: '/promocoes', texto: 'Promoções'},
+      {href: '/categorias', texto: 'Categorias'},
   ]
   
   const NavLink = (props: Props) => {

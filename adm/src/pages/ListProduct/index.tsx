@@ -1,6 +1,8 @@
+
+
 import { CSSReset, ChakraProvider, extendTheme } from "@chakra-ui/react";
 import LayoutProps from "../../components/Layout"
-import ProductForm from "../../components/createProductForm/index.tsx";
+import EditProductForm from "../../components/editProductForm/index.tsx";
 
 
 const theme = extendTheme({
@@ -18,10 +20,12 @@ const theme = extendTheme({
         <LayoutProps>
           <ChakraProvider theme={theme}>
             <CSSReset />
-            <ProductForm onSubmit={handleProductSubmit} user="Nome do Usuário" />
+           
           </ChakraProvider>
         </LayoutProps>
         </>
     )
 }
 export default ProductPage;
+
+

@@ -1,4 +1,5 @@
-import {Button, Stack, Center, Heading } from "@chakra-ui/react";
+import {Button, Stack, Center, Heading} from "@chakra-ui/react";
+import { Link } from 'react-router-dom';
 
 export default function Products() {
   return (
@@ -23,6 +24,8 @@ export default function Products() {
           margin={'50px'}>
          Cadastre, consulte ou edite os produtos do catálogo.
         </Center>
+        
+        <Link to={"/listarProdutos"}> 
         <Stack spacing={6}>
           <Button
             bg={'#7a5656'}
@@ -32,7 +35,8 @@ export default function Products() {
             }}>
             VER MAIS
           </Button>
-        </Stack>
+          </Stack>
+          </Link>
       </Stack>
   
   )
