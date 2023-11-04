@@ -1,26 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import { useProduct } from '../../hooks/queries/product';
+import { Card, Grid, Heading, Image, Text } from '@chakra-ui/react';
 
-export interface Product {
+export interface IProduct {
   id: number;
   name: string;
-  imageSrc: string;
   price: number;
   description: string;
+  category: string;
+  imageSrc: string;
 }
 
-interface ProductDetailProps {
-  product: Product;
-}
+function ProductDetail(){
+  const {
+    data: productList, 
+    refetch: refetchProduct
+  } = useProduct()
+  console.log(productList)
+  
+  const product = productList 
 
-const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   return (
+    
     <div>
-      <h2>{product.name}</h2>
-      <img src={product.imageSrc} alt={product.name} />
-      <p>Preço: ${product.price}</p>
-      <p>Descrição: {product.description}</p>
-      <button>Salvar</button>
+      {productList && (
+     <Grid>
+          <Card>
+            <Heading>{product.name}</Heading>
+            <Image src={product.imageSrc} alt={product.name} />
+            <Text>Preço: R${product.price}</Text>
+            <Text>Descrição: {product.description}</Text>
+          </Card>
+</Grid>
+      
+          )}
     </div>
   );
 };
 export default ProductDetail;
+
