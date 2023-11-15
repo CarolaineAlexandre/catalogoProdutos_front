@@ -32,7 +32,6 @@ export default function LoginProps() {
    api.post('/auth',newLogin).then(response => {
       setInputEmail('');
       setInputPassword('');
-      console.log('Passou', response.data);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userId', response.data.user.id);
       if(response.status == 200){
