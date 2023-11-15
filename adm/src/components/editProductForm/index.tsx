@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import { useEffect, useState } from "react"
 import {
   Box,
   FormControl,
@@ -6,185 +6,194 @@ import {
   Input,
   Button,
   Checkbox,
-  Textarea,
-  VStack,
-  Image,
   Grid,
   GridItem,
-  Select,
-} from "@chakra-ui/react";
-import { useDropzone } from "react-dropzone";
+} from "@chakra-ui/react"
 
-// Define as props para o componente ProductForm
-interface ProductFormProps {
-  onSubmit: (product: Product) => void; // Função para lidar com o envio do formulário
-  user: string; // Nome do usuário
-}
-
-// Cria o componente ProductForm
-const EditProductForm: React.FC<ProductFormProps> = ({ onSubmit, user }) => {
-  // Inicializa o estado para os campos do formulário do produto
-  const [product, setProduct] = useState<Product>({
-    id: 0,
-    name: "",
-    category: "",
-    description: "",
-    color: "",
-    price: 0,
-    isPromotional: false,
-    createdAt: new Date(),
-    createdBy: user,
-    updatedAt: new Date(),
-    validity: new Date(),
-    photos: [],
-  });
-
-  // Lida com o envio de imagens e adiciona URLs ao produto
-  const handleImageUpload = (acceptedFiles: File[]) => {
-    const newPhotos = acceptedFiles.map((file) => URL.createObjectURL(file));
-    setProduct({ ...product, photos: [...product.photos, ...newPhotos] });
-  };
-
-  // Remove uma imagem do produto
-  const handleRemoveImage = (index: number) => {
-    const updatedPhotos = [...product.photos];
-    updatedPhotos.splice(index, 1);
-    setProduct({ ...product, photos: updatedPhotos });
-  };
-
-  // Lida com o envio do formulário
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    onSubmit(product);
-  };
-
-  // Lida com as mudanças nos campos de entrada
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
-  };
-
-  // Lida com as mudanças nas caixas de seleção
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setProduct({ ...product, [name]: checked });
-  };
-
-  // Exibe miniaturas de imagens lado a lado com a capacidade de removê-las
-  const thumbs = product.photos.map((photo, index) => (
-    <Box key={index} display="inline-block" mr={2}>
-      <Image src={photo} alt={`Imagem do Produto ${index}`} maxH="80px" maxW="80px" />
-      <Button
-        size="sm"
-        colorScheme="red"
-        mt={2}
-        onClick={() => handleRemoveImage(index)}
-      >
-        Remover
-      </Button>
-    </Box>
-  ));
+import Category_dropdown from "../Category_dropdown"
+import { useCategories } from "../../hooks/queries/category"
+import { useMutateProduct } from "../../hooks/mutations/products"
+import { useProductsById } from "../../hooks/queries/products"
+import { useParams } from "react-router-dom"
 
 
+
+
+
+export default function EditProductForm() {
+  const {id} = useParams()
+  console.log("Teste"+id)
+  console.log(typeof(id))
+
+  const { data: product} = useProductsById(Number(id));
+  const { data: category } = useCategories();
+  const { mutate: mutateProduct } = useMutateProduct();
+
+  const [Id, setId] = useState(0);
+  const [inputName, setInputName] = useState("");
+  const [inputDescription, setInputDescription] = useState("");
+  const [inputColor, setInputColor] = useState("");
+  const [inputDate, setInputDate] = useState("");
+  const [inputPrice, setInputPrice] = useState(0);
+  const [checkboxPromotion, setCheckboxPromotion] = useState(false);
+  const [selectCategory, setSelectCategory] = useState(0);
+
+  useEffect(() => {
+    // Atualiza o estado quando os dados do produto estão disponíveis
+    if (product) {
+      setId(product.id)
+      setInputName(product.name);
+      setInputDescription(product.description);
+      setInputColor(product.color);
+      setInputDate(new Date(product.expiration_date).toISOString().split('T')[0]);
+      setInputPrice(product.price);
+      setCheckboxPromotion(product.promotion);
+      setSelectCategory(product.category.id)
+    }
+  }, [product]);
+
+
+
+
+  console.log(product)
+
+
+  function cadastrarProduto() {
+    
+    if (inputName && inputDescription && inputColor && inputDate != '') {
+
+      if (selectCategory > 0) {
+        if (inputPrice > 0) {
+
+          const novoProduto = {
+            name: inputName,
+            description: inputDescription,
+            category: selectCategory,
+            price: inputPrice,
+            color: inputColor,
+            promotion: checkboxPromotion,
+            expiration_date: new Date(inputDate + 'T00:00:00-03:00'),
+            photo1: "https://pifatec.s3.us-east-2.amazonaws.com/image1.png",
+            photo2: "https://pifatec.s3.us-east-2.amazonaws.com/image2.png",
+            photo3: "https://pifatec.s3.us-east-2.amazonaws.com/image3.png",
+            photo4: "https://pifatec.s3.us-east-2.amazonaws.com/image4.png"
+          }
+
+          mutateProduct(novoProduto, {
+            onSuccess: response => {
+              const produtoId = response.id
+              alert('Produto cadastrado com sucesso no codigo ' + produtoId)
+
+            },
+            onError: error => {
+              alert("Falha ao cadastrar o produto, por favor tente novamente!")
+              console.log(novoProduto)
+              console.log(error)
+            }
+          })
+
+        }
+
+        else {
+          alert("Por favor informe um preço válido!")
+        }
+      }
+      else {
+        alert("Por favor selecione uma categoria para o produto!")
+      }
+
+
+    }
+
+    else {
+      alert("Por favor preencha todos os campos")
+    }
+  }
 
   return (
     <Box pl="1rem" pr="1rem" pt="2rem" pb="1rem" margin="1rem">
-    <FormControl>
-      <Grid templateColumns="repeat(3, 1fr)" gap={4}>
-        <GridItem colSpan={2}>
+      <FormControl>
+        <Grid templateColumns="repeat(3, 1fr)" gap={4}>
+          <GridItem colSpan={2}>
+          <FormLabel>Código do Produto</FormLabel>
+          <p>{Id}</p>
+            <p></p>
+            <FormLabel>Nome do Produto</FormLabel>
+            <Input type="text"
+              onChange={(evento) => setInputName(evento.target.value)}
+              value={inputName} />
+            <FormLabel>Descrição</FormLabel>
+            <Input type="text"
+              onChange={(evento) => setInputDescription(evento.target.value)}
+              value={inputDescription} />
+            <FormLabel>Fotos do Produto</FormLabel>
+            <div style={{ margin: '0.5rem 0' }}>
+            <input type="file" accept="image/png, image/jpeg, image/gif"/>
+            </div>
+            <div style={{ margin: '0.5rem 0' }}>
+            <input type="file" accept="image/png, image/jpeg, image/gif"/>
+            </div>
+            <div style={{ margin: '0.5rem 0' }}>
+            <input type="file" accept="image/png, image/jpeg, image/gif"/>
+            </div>
+            <div style={{ margin: '0.5rem 0' }}>
+            <input type="file" accept="image/png, image/jpeg, image/gif"/>
+            </div>
 
-          <FormLabel>Nome do Produto</FormLabel>
-          <Input
-            type="text"
-            name="name"
-            value={product.name}
-            onChange={handleInputChange}
-          />
-          <FormLabel>Descrição</FormLabel>
-          <Input
-            type="text"
-            name="description"
-            value={product.description}
-            onChange={handleInputChange}
-          />
-          <FormLabel>Fotos do Produto</FormLabel>
-          <div style={{ margin: '0.5rem 0' }}>
-          <input type="file" accept="image/png, image/jpeg, image/gif" />
-          </div>
-          <div style={{ margin: '0.5rem 0' }}>
-          <input type="file" accept="image/png, image/jpeg, image/gif" />
-          </div>
-          <div style={{ margin: '0.5rem 0' }}>
-          <input type="file" accept="image/png, image/jpeg, image/gif" />
-          </div>
-          <div style={{ margin: '0.5rem 0' }}>
-          <input type="file" accept="image/png, image/jpeg, image/gif" />
-          </div>
-          
-        </GridItem>
-        <GridItem colSpan={1}>
-        <FormLabel>Codigo do Produto</FormLabel>
-          <Input
-            type="text"
-            name="product_id"
-            value={product.id}
-            onChange={handleInputChange}
-          />
-          <FormLabel>Categoria</FormLabel>
-          <Select placeholder="Selecione a categoria">
-            <option value="option1">Categoria 1</option>
-            <option value="option2">Categoria 2</option>
-            <option value="option3">Categoria 3</option>
-          </Select>
-          <FormLabel>Cor</FormLabel>
-          <Input
-            type="text"
-            name="color"
-            value={product.color}
-            onChange={handleInputChange}
-          />
+          </GridItem>
+          <GridItem colSpan={1}>
+            <FormLabel>Categoria</FormLabel>
+            {
+              category &&
+              (<Category_dropdown category={category} selectCategory={selectCategory} setSelectCategory={setSelectCategory} />
+              )}
 
-          <FormLabel>Data de Validade</FormLabel>
-          <Input placeholder="Selecione a data" size="md" type="date" />
-          
-          <FormLabel>Preço</FormLabel>
-          <Input
-            type="text"
-            name="price"
-            value={product.price}
-            onChange={handleInputChange}
-          />
+            <FormLabel>Cor</FormLabel>
+            <Input type="text"
+              onChange={(evento) => setInputColor(evento.target.value)}
+              value={inputColor} />
 
-          <FormLabel>Em promoção?</FormLabel>
-          <Checkbox
-            name="isPromotional"
-            isChecked={product.isPromotional}
-            onChange={handleCheckboxChange}
-          />
-        </GridItem>
+            <FormLabel>Data de Validade</FormLabel>
+            <Input placeholder="Selecione a data" size="md" type="date"
+              onChange={(evento) => setInputDate(evento.target.value)}
+              value={inputDate} />
 
-        <GridItem colSpan={3}>
-        <Box textAlign="center">
-          <Button
-            mt={4}
-            bg={'#7a5656'}
-            size="md"
-            type="submit"
-            color={'white'}
-            _hover={{
-              bg: '#c5904A',
-            }}
-          >
-            Salvar
-          </Button>
-        </Box>
-      </GridItem>
-      </Grid>
-    </FormControl>
+            <FormLabel>Preço</FormLabel>
+            <Input type="number"
+              onChange={(evento) => setInputPrice(parseFloat(evento.target.value))}
+              value={inputPrice} />
+
+            <FormLabel>Em promoção?</FormLabel>
+            <Checkbox
+              onChange={(evento) => setCheckboxPromotion(evento.target.checked)}
+              checked={checkboxPromotion} />
+          </GridItem>
+
+          <GridItem colSpan={3}>
+            <Box textAlign="center">
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  cadastrarProduto();
+                }}
+                mt={4}
+                bg={'#7a5656'}
+                size="md"
+                type="submit"
+                color={'white'}
+                _hover={{
+                  bg: '#c5904A',
+                }}
+              >
+                Salvar
+              </Button>
+            </Box>
+          </GridItem>
+        </Grid>
+      </FormControl>
     </Box>
+
   );
 };
 
-export default EditProductForm;
+

@@ -18,7 +18,7 @@ import {
   }
   
   const Links = [
-      {href: '/', texto: 'Home'},
+      {href: '/home', texto: 'Home'},
       {href: '/produtos', texto: 'Produtos'},
       {href: '/categorias', texto: 'Categorias'},
   ]

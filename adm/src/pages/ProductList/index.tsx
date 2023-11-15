@@ -1,4 +1,4 @@
-import ProductList from "../../components/Category_grid";
+import ProductList from "../../components/ProductFilter";
 import LayoutProps from "../../components/Layout";
 
 

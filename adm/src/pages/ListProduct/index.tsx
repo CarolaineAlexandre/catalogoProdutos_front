@@ -18,7 +18,7 @@ const theme = extendTheme({
     return (
         <>
         <LayoutProps>
-          <ChakraProvider theme={theme}>
+          <ChakraProvider>
             <CSSReset />
            
           </ChakraProvider>
