@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { ChangeEvent, useState } from "react"
 import {
   Box,
   FormControl,
@@ -13,13 +13,14 @@ import {
 import Category_dropdown from "../Category_dropdown"
 import { useCategories } from "../../hooks/queries/category"
 import { useMutateProduct } from "../../hooks/mutations/products"
+import { api } from "../../helpers/axios"
 
 
 export default function ProductForm() {
 
   const { data: category } = useCategories()
 
-  const { mutate:mutateProduct } = useMutateProduct()
+  const { mutate: mutateProduct } = useMutateProduct()
 
   const [inputName, setInputName] = useState('')
 
@@ -35,39 +36,91 @@ export default function ProductForm() {
 
   const [selectCategory, setSelectCategory] = useState(0)
 
+  const [photo1, setPhoto1] = useState<File | null>(null)
+  const [photo2, setPhoto2] = useState<File | null>(null)
+  const [photo3, setPhoto3] = useState<File | null>(null)
+  const [photo4, setPhoto4] = useState<File | null>(null)
+  const [url1, setUrl1] = useState("")
+  const [url2, setUrl2] = useState("")
+  const [url3, setUrl3] = useState("")
+  const [url4, setUrl4] = useState("")
+
+  const handleUpload = (photo: File | null, setUrlAws: React.Dispatch<React.SetStateAction<string>>) => {
+    if (!photo) {
+      alert('Nenhuma foto fornecida para upload.');
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('file', photo);
+  
+    api.post('/photo/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    .then((response) => {
+      alert('Imagem enviada com sucesso:');
+      setUrlAws(response.data.urlPhotoAws);
+    })
+    .catch((error) => {
+      alert('Erro ao enviar a imagem:');
+    });
+  };
+
+  // Chame a função para iniciar o processo de upload
 
   function cadastrarProduto() {
-    
+
     if (inputName && inputDescription && inputColor && inputDate != '') {
 
       if (selectCategory > 0) {
         if (inputPrice > 0) {
-
-          const novoProduto = {
-            name: inputName,
-            description: inputDescription,
-            category: selectCategory,
-            price: inputPrice,
-            color: inputColor,
-            promotion: checkboxPromotion,
-            expiration_date: new Date(inputDate + 'T00:00:00-03:00'),
-            photo1: "https://pifatec.s3.us-east-2.amazonaws.com/image1.png",
-            photo2: "https://pifatec.s3.us-east-2.amazonaws.com/image2.png",
-            photo3: "https://pifatec.s3.us-east-2.amazonaws.com/image3.png",
-            photo4: "https://pifatec.s3.us-east-2.amazonaws.com/image4.png"
-          }
-
-          mutateProduct(novoProduto, {
-            onSuccess: response => {
-              const produtoId = response.id
-              alert('Produto cadastrado com sucesso no codigo ' + produtoId)
-
-            },
-            onError: error => {
-              alert("Falha ao cadastrar o produto, por favor tente novamente!")
+          if (url1 && url2 && url3 && url4 != '') {
+            const novoProduto = {
+              name: inputName,
+              description: inputDescription,
+              category: selectCategory,
+              price: inputPrice,
+              color: inputColor,
+              promotion: checkboxPromotion,
+              expiration_date: new Date(inputDate + 'T00:00:00-03:00'),
+              photo1: url1,
+              photo2: url2,
+              photo3: url3,
+              photo4: url4
             }
-          })
 
+            console.log(novoProduto)
+            mutateProduct(novoProduto, {
+              onSuccess: response => {
+                const produtoId = response.id
+                alert('Produto cadastrado com sucesso no codigo ' + produtoId)
+                selectCategory
+                setInputName('')
+                setInputDescription('')
+                setSelectCategory(0)
+                setInputPrice(0)
+                setInputColor('')
+                setCheckboxPromotion(false)
+                setInputDate('')
+                setPhoto1(null)
+                setPhoto2(null)
+                setPhoto3(null)
+                setPhoto4(null)
+                setUrl1('')
+                setUrl2('')
+                setUrl3('')
+                setUrl4('')
+              },
+              onError: error => {
+                alert("Falha ao cadastrar o produto, por favor tente novamente!")
+              }
+            })
+          }
+          else {
+            alert("É necessário salvar fotos para o produto!")
+          }
         }
 
         else {
@@ -101,16 +154,86 @@ export default function ProductForm() {
               value={inputDescription} />
             <FormLabel>Fotos do Produto</FormLabel>
             <div style={{ margin: '0.5rem 0' }}>
-            <input type="file" accept="image/png, image/jpeg, image/gif"/>
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/gif"
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  if (event.target.files) {
+                    setPhoto1(event.target.files[0]);
+                  }
+                }}
+              />
+              <Button onClick={() => handleUpload(photo1, setUrl1)} 
+                mt={4}
+                bg={'#7a5656'}
+                size="md"
+                type="submit"
+                color={'white'}
+                _hover={{
+                  bg: '#c5904A',
+                }}>Salvar Foto 1</Button>
             </div>
+
             <div style={{ margin: '0.5rem 0' }}>
-            <input type="file" accept="image/png, image/jpeg, image/gif"/>
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/gif"
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  if (event.target.files) {
+                    setPhoto2(event.target.files[0]);
+                  }
+                }}
+              />
+              <Button onClick={() => handleUpload(photo2, setUrl2)} 
+                mt={4}
+                bg={'#7a5656'}
+                size="md"
+                type="submit"
+                color={'white'}
+                _hover={{
+                  bg: '#c5904A',
+                }}>Salvar Foto 2</Button>
             </div>
+
             <div style={{ margin: '0.5rem 0' }}>
-            <input type="file" accept="image/png, image/jpeg, image/gif"/>
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/gif"
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  if (event.target.files) {
+                    setPhoto3(event.target.files[0]);
+                  }
+                }}
+              />
+              <Button onClick={() => handleUpload(photo3, setUrl3)}  mt={4}
+                bg={'#7a5656'}
+                size="md"
+                type="submit"
+                color={'white'}
+                _hover={{
+                  bg: '#c5904A',
+                }}>Salvar Foto 3</Button>
             </div>
+
             <div style={{ margin: '0.5rem 0' }}>
-            <input type="file" accept="image/png, image/jpeg, image/gif"/>
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/gif"
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  if (event.target.files) {
+                    setPhoto4(event.target.files[0]);
+                  }
+                }}
+              />
+              <Button onClick={() => handleUpload(photo4, setUrl4)}
+               mt={4}
+               bg={'#7a5656'}
+               size="md"
+               type="submit"
+               color={'white'}
+               _hover={{
+                 bg: '#c5904A',
+               }}>Salvar Foto 4</Button>
             </div>
 
           </GridItem>
@@ -164,8 +287,10 @@ export default function ProductForm() {
           </GridItem>
         </Grid>
       </FormControl>
-    </Box>
-  );
-};
+    </Box >
+  )
+}
+
+
 
 
