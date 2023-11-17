@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import {
   Box,
   FormControl,
@@ -15,17 +15,19 @@ import { useCategories } from "../../hooks/queries/category"
 import { useMutateProduct } from "../../hooks/mutations/products"
 import { useProductsById } from "../../hooks/queries/products"
 import { useParams } from "react-router-dom"
+import { api } from "../../helpers/axios"
 
 
 
 
 
 export default function EditProductForm() {
-  const {id} = useParams()
-  console.log("Teste"+id)
-  console.log(typeof(id))
 
-  const { data: product} = useProductsById(Number(id));
+  const { id } = useParams()
+  console.log("Teste" + id)
+  console.log(typeof (id))
+
+  const { data: product } = useProductsById(Number(id));
   const { data: category } = useCategories();
   const { mutate: mutateProduct } = useMutateProduct();
 
@@ -57,9 +59,40 @@ export default function EditProductForm() {
 
   console.log(product)
 
+  const [photo1, setPhoto1] = useState<File | null>(null)
+  const [photo2, setPhoto2] = useState<File | null>(null)
+  const [photo3, setPhoto3] = useState<File | null>(null)
+  const [photo4, setPhoto4] = useState<File | null>(null)
+  const [url1, setUrl1] = useState("")
+  const [url2, setUrl2] = useState("")
+  const [url3, setUrl3] = useState("")
+  const [url4, setUrl4] = useState("")
 
-  function cadastrarProduto() {
-    
+  const handleUpload = (photo: File | null, setUrlAws: React.Dispatch<React.SetStateAction<string>>) => {
+    if (!photo) {
+      alert('Nenhuma foto fornecida para upload.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', photo);
+
+    api.post('/photo/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then((response) => {
+        alert('Imagem enviada com sucesso');
+        setUrlAws(response.data.urlPhotoAws);
+      })
+      .catch((error) => {
+        alert('Erro ao enviar a imagem');
+      });
+  };
+
+  function atualizarProduto() {
+
     if (inputName && inputDescription && inputColor && inputDate != '') {
 
       if (selectCategory > 0) {
@@ -73,24 +106,15 @@ export default function EditProductForm() {
             color: inputColor,
             promotion: checkboxPromotion,
             expiration_date: new Date(inputDate + 'T00:00:00-03:00'),
-            photo1: "https://pifatec.s3.us-east-2.amazonaws.com/image1.png",
-            photo2: "https://pifatec.s3.us-east-2.amazonaws.com/image2.png",
-            photo3: "https://pifatec.s3.us-east-2.amazonaws.com/image3.png",
-            photo4: "https://pifatec.s3.us-east-2.amazonaws.com/image4.png"
+            photo1: url1,
+            photo2: url2,
+            photo3: url3,
+            photo4: url4
           }
 
-          mutateProduct(novoProduto, {
-            onSuccess: response => {
-              const produtoId = response.id
-              alert('Produto cadastrado com sucesso no codigo ' + produtoId)
-
-            },
-            onError: error => {
-              alert("Falha ao cadastrar o produto, por favor tente novamente!")
-              console.log(novoProduto)
-              console.log(error)
-            }
-          })
+          api.put(`/product/${id}`, novoProduto ).then(()=>{
+            alert('Cadastro atualizado no codigo '+id)
+          }).catch((erro) => alert('Ocorreu um erro ao atualizar o produto!'))
 
         }
 
@@ -115,8 +139,8 @@ export default function EditProductForm() {
       <FormControl>
         <Grid templateColumns="repeat(3, 1fr)" gap={4}>
           <GridItem colSpan={2}>
-          <FormLabel>Código do Produto</FormLabel>
-          <p>{Id}</p>
+            <FormLabel>Código do Produto</FormLabel>
+            <p>{Id}</p>
             <p></p>
             <FormLabel>Nome do Produto</FormLabel>
             <Input type="text"
@@ -128,16 +152,86 @@ export default function EditProductForm() {
               value={inputDescription} />
             <FormLabel>Fotos do Produto</FormLabel>
             <div style={{ margin: '0.5rem 0' }}>
-            <input type="file" accept="image/png, image/jpeg, image/gif"/>
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/gif"
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  if (event.target.files) {
+                    setPhoto1(event.target.files[0]);
+                  }
+                }}
+              />
+              <Button onClick={() => handleUpload(photo1, setUrl1)}
+                mt={4}
+                bg={'#7a5656'}
+                size="md"
+                type="submit"
+                color={'white'}
+                _hover={{
+                  bg: '#c5904A',
+                }}>Salvar Foto 1</Button>
             </div>
+
             <div style={{ margin: '0.5rem 0' }}>
-            <input type="file" accept="image/png, image/jpeg, image/gif"/>
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/gif"
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  if (event.target.files) {
+                    setPhoto2(event.target.files[0]);
+                  }
+                }}
+              />
+              <Button onClick={() => handleUpload(photo2, setUrl2)}
+                mt={4}
+                bg={'#7a5656'}
+                size="md"
+                type="submit"
+                color={'white'}
+                _hover={{
+                  bg: '#c5904A',
+                }}>Salvar Foto 2</Button>
             </div>
+
             <div style={{ margin: '0.5rem 0' }}>
-            <input type="file" accept="image/png, image/jpeg, image/gif"/>
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/gif"
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  if (event.target.files) {
+                    setPhoto3(event.target.files[0]);
+                  }
+                }}
+              />
+              <Button onClick={() => handleUpload(photo3, setUrl3)} mt={4}
+                bg={'#7a5656'}
+                size="md"
+                type="submit"
+                color={'white'}
+                _hover={{
+                  bg: '#c5904A',
+                }}>Salvar Foto 3</Button>
             </div>
+
             <div style={{ margin: '0.5rem 0' }}>
-            <input type="file" accept="image/png, image/jpeg, image/gif"/>
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/gif"
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  if (event.target.files) {
+                    setPhoto4(event.target.files[0]);
+                  }
+                }}
+              />
+              <Button onClick={() => handleUpload(photo4, setUrl4)}
+                mt={4}
+                bg={'#7a5656'}
+                size="md"
+                type="submit"
+                color={'white'}
+                _hover={{
+                  bg: '#c5904A',
+                }}>Salvar Foto 4</Button>
             </div>
 
           </GridItem>
@@ -174,7 +268,7 @@ export default function EditProductForm() {
               <Button
                 onClick={(e) => {
                   e.preventDefault();
-                  cadastrarProduto();
+                  atualizarProduto();
                 }}
                 mt={4}
                 bg={'#7a5656'}
