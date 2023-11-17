@@ -1,42 +1,66 @@
-import { Heading, Grid, GridItem } from '@chakra-ui/react';
-import { useParams } from 'react-router-dom';
-import LayoutProps from '../../components/Layout';
+import React from 'react';
+import { Heading, Grid, GridItem, Center, Text, Box, Flex, Card, Image } from '@chakra-ui/react';
+import LayoutProps from '../../components/Layout2';
+import { useProductByCategory } from '../../hooks/queries/catalogCategory';
+import { useNavigate, useParams } from 'react-router-dom';
+import Carousel from '../../components/CarouselCatalog';
 
-interface Product {
+interface ICategory {
   id: number;
   name: string;
-  category: string;
+  description: string;
+  price: number;
+  photo1: string;
+  photo2: string;
+  photo3: string;
+  photo4: string;
 }
 
-const products: Product[] = [
-  { id: 1, name: 'Produto 1', category: 'Categoria A' },
-  { id: 2, name: 'Produto 2', category: 'Categoria B' },
-  { id: 3, name: 'Produto 3', category: 'Categoria A' },
-];
+export default function CategoryPage() {
+  const { category } = useParams();
+  const { data: catalogList } = useProductByCategory(Number(category));
 
-function CategoryPage() {
-  const { category } = useParams<{ category: string }>();
-
-  // Filtrar os produtos pela categoria selecionada
-  const filteredProducts = products.filter((product) => product.category === category);
-
+  const navigate = useNavigate();
+  const handleButtonClick = (id) => {
+    navigate(`/product/${id}`);
+  };
+  
   return (
     <LayoutProps>
-    <Heading color={'#c5904A'} alignContent={'flex-start'}  as='h3' size='lg'>catalogo/categoria/ {category}</Heading>
-    <hr />
-    {filteredProducts.length === 0 ? (
-      <Heading mt={4}>Não há produtos cadastrados nesta categoria.</Heading>
-    ) : (
-      <Grid templateColumns="repeat(4, 1fr)" gap={4}>
-        {filteredProducts.map((product) => (
-          <GridItem key={product.id} colSpan={1}>
-            {product.name}
-          </GridItem>
-        ))}
-      </Grid>
-    )}
-  </LayoutProps>
+      <Box padding="20px">
+        <Heading color="#c5904A" as="h3" size="lg" mb="20px">
+          catálogo/categoria/{category}
+        </Heading>
+        {!catalogList ? (
+          <Text>Não há produtos nessa categoria</Text>
+        ) : (
+          <Grid templateColumns="repeat(1, 1fr)" gap={5}>
+            {catalogList.map((catalog: ICategory) => (
+              <Card key={catalog.id} onClick={() => {handleButtonClick(catalog.id)}}>
+                <Flex flexDirection="column">
+                  <Box mt="20px" display="flex" alignItems="center">
+                  <Carousel
+                      photo1={catalog.photo1}
+                      photo2={catalog.photo2}
+                      photo3={catalog.photo3}
+                      photo4={catalog.photo4}
+                    />
+                    <Box ml="20px">
+                      <Text fontSize="40px" fontWeight="bold">
+                        {catalog.name}
+                      </Text>
+                      <Text fontSize="25px" color="grey">
+                        Preço: R${catalog.price}
+                      </Text>
+                      <Text fontSize="20px">Descrição: {catalog.description}</Text>
+                    </Box>
+                  </Box>
+                </Flex>
+              </Card>
+            ))}
+          </Grid>
+        )}
+      </Box>
+    </LayoutProps>
   );
 }
-
-export default CategoryPage;
