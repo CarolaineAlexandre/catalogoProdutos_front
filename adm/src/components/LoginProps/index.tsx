@@ -28,11 +28,8 @@ export default function LoginProps() {
   const toast = useToast()
 
   const {mutate: mutateLogin, isError, error } = useMutateLogin()
-  console.log("🚀 ~ file: index.tsx:29 ~ LoginProps ~ mutateLogin:", mutateLogin)
 
-  function Login(){
-    console.log('entrou login')
-    
+  function Login(){    
    if(inputEmail != '' && inputPassword != ''){
     const newLogin: ILogin = {
       email: inputEmail,
