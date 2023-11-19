@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Text, Button, Center, VStack, HStack, Icon } from '@chakra-ui/react';
-import { FaPhone, FaEnvelope, FaMapMarker, FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
+import { Box, Text, Button, Center, HStack, Icon } from '@chakra-ui/react';
+import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
 
 interface ContactInfoProps {
   phoneNumber: string;

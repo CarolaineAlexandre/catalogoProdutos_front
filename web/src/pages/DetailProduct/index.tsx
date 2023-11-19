@@ -4,9 +4,7 @@ import {
   Button,
   Text,
   Heading,
-  Image,
   VStack,
-  useColorModeValue,
   Center,
   Grid,
   GridItem,
@@ -22,7 +20,7 @@ const {productId} = useParams()
 console.log(productId)
   const {
     data: product,
-    refetch: refetchCatalog
+    refetch: _refetchCatalog
   } = useProduct(Number(productId));
   console.log(product)
  
@@ -30,8 +28,9 @@ console.log(productId)
   // console.log(product)
  
   const linkZap = 'https://api.whatsapp.com/send?phone=+5519993554422&text=Oi+tenho+interesse+no+produto'
-  function seeWhatsApp(){
-  }
+  // function seeWhatsApp(){
+  // }
+
   return (
     <LayoutProps>
 <Center>

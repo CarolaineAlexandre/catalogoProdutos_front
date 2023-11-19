@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useProduct } from '../../hooks/queries/product';
-import { Card, Center, Grid, Heading, Image, Text } from '@chakra-ui/react';
+import { Card, Center, Grid, Heading, Text } from '@chakra-ui/react';
 import Carousel from '../../components/CarouselCatalog';
 
 export interface IProduct {
@@ -18,7 +18,7 @@ function ProductDetail() {
   const { productId } = useParams()
   const {
     data: product,
-    refetch: refetchProduct
+    refetch: _refetchProduct
   } = useProduct(Number(productId))
   console.log(product)
 

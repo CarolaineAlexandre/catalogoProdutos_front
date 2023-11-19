@@ -1,4 +1,4 @@
-import { Box, Button, Center, Flex, Image, Text, extendTheme } from '@chakra-ui/react';
+import { Button, Center, Flex, Image, Text } from '@chakra-ui/react';
 import { useCategory } from '../../hooks/queries/category';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,7 +42,7 @@ function CatalogItem({ id, photo, name, description }: ICatalog) {
 }
 
 function CatalogProps() {
-  const { data: categoryList, refetch: refetchCategory } = useCategory();
+  const { data: categoryList, refetch: _refetchCategory } = useCategory();
 
   if (!categoryList) {
     return <div>Loading...</div>;
