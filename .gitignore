@@ -1,2 +1,4 @@
 adm/node_modules/*
 web/node_modules/*
+*dist*
+.hintrc
