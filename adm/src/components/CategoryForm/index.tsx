@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Box, Button, Center, Input, Stack, Text } from '@chakra-ui/react';
+import { useCreateCategory } from '../../hooks/mutation/category';
+import { api } from '../../helpers/axios';
 
-interface CategoryFormProps {
-  onCreateCategory: (name: string, description: string) => void;
-}
 
-const CategoryForm: React.FC<CategoryFormProps> = ({ onCreateCategory }) => {
+function CategoryForm (){
   const [categoryName, setCategoryName] = useState('');
   const [categoryDescription, setCategoryDescription] = useState('');
+  const [categoryImage, setCategoryImage] = useState('');
+  const [urlAws, setUrlAws] = useState('');
+  const [uploadSucesso, setUploadSucesso] = useState(false);
 
   const handleCategoryNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCategoryName(event.target.value);
@@ -15,28 +17,59 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onCreateCategory }) => {
   const handleCategoryDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCategoryDescription(event.target.value);
   };
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    if (categoryName.trim() === '') {
-      return; 
-    }
-
-    onCreateCategory(categoryName,categoryDescription);
-    setCategoryName('');
-    setCategoryDescription('')
+  const handleCategoryImageChange = (event: any) => {
+    setCategoryImage(event.target.files[0]);
   };
+
+    const handleUpload = () => {
+      const formData = new FormData();
+      formData.append('file', categoryImage);
+      api.post('/photo/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        console.log('Imagem enviada com sucesso:', response.data);
+        setUrlAws(response.data.urlPhotoAws)
+        setUploadSucesso(true);
+      })
+      .catch((error) => {
+        console.error('Erro ao enviar a imagem:', error);
+      });
+    };
+
+  const { mutate: mutateCreateCategory } = useCreateCategory()
+
+  function createCategory() {
+    if (categoryName != '' && categoryDescription != ''){
+      const create = {
+        name: categoryName,
+        description: categoryDescription,
+        photo: urlAws
+      } 
+      mutateCreateCategory(create,{
+        onSuccess:(data) => {
+          console.log(data)
+          setCategoryName('')
+          setCategoryDescription('')
+          setCategoryImage('')
+          setUploadSucesso(true);
+        },
+        onError:(erro) =>{
+          alert("Erro ao criar categoria")
+        }
+      })
+    }
+  }
 
   return (
     <Box borderWidth="1px" borderRadius="md" p={4}>
       <Text fontSize="xl" mb={4}>
         Categorias
       </Text>
-      <form onSubmit={handleSubmit}>
+      <form>
         <Center>
-
-
         <Stack direction="column" spacing={4} w='50%' >
         <Text>Nome da categoria</Text>
           <Input
@@ -52,13 +85,31 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onCreateCategory }) => {
             value={categoryDescription}
             onChange={handleCategoryDescriptionChange}
           />
-          <Button type="submit"
-           bg={'#7a5656'}
-           color={'white'}
-           _hover={{
-             bg: '#c5904A',}}>
-            Salvar
+          <Text>Imagem</Text>
+            <Input
+            type="file"        
+            onChange={handleCategoryImageChange}
+          />
+          <Button
+            bg={'#7a5656'}
+            color={'white'}
+            _hover={{
+              bg: '#c5904A',}}
+              onClick={handleUpload}>
+            Confirmar Foto
           </Button>
+
+          <Button
+            onClick={createCategory}
+            bg={'#7a5656'}
+            color={'white'}
+            _hover={{
+              bg: '#c5904A',
+            }}
+            style={{ display: uploadSucesso ? 'block' : 'none' }}
+            >
+              Salvar
+            </Button>
         </Stack>
         </Center>
       </form>

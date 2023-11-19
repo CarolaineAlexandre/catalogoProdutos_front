@@ -1,46 +1,53 @@
-import React from 'react';
-import { Box, Button, List, ListItem, Text } from '@chakra-ui/react';
+import { useState } from "react";
+import {
+  Box,
+  Flex,
+  Heading,
+  Input
+} from "@chakra-ui/react";
+import CategoriesFinder from "../CategoryFinder";
+import { api } from "../../helpers/axios";
+import { useCategories } from "../../hooks/queries/category";
 
-interface CategoryListProps {
-  categories: string[];
-  // description: string[];
-  onEditCategory: (index: number, newName: string) => void;
-  onDeleteCategory: (index: number) => void;
-}
 
-const CategoryList: React.FC<CategoryListProps> = ({
-  categories,
-  // description,
-  onEditCategory,
-  onDeleteCategory,
-}) => {
+const CategoryFilter = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const { data: category,
+    refetch: refetchCategories
+   } = useCategories()
+   
+   console.log(category)
+  function removeCategory(id: number) {
+    console.log(id)
+    api.delete(`/category/${id}`).then(() => {
+      refetchCategories();
+      alert("A categoria de código " + id + " foi deletada com sucesso!");
+    })
+    .catch((error) => {
+      console.error("Erro ao deletar categoria:", error);
+      alert("Erro ao deletar a categoria. Por favor, tente novamente.");
+    });
+  }
+
   return (
-    <List spacing={3}>
-      {categories.map((category, index) => (
-        <ListItem key={index} display="flex" justifyContent="space-between" alignItems="center">
-          <Text>{category}</Text>
-          {/* <Text>{description}</Text> */}
-          <Box>
-            <Button size="sm" onClick={() => onEditCategory(index, category)} 
-            bg={'#7a5656'}
-            color={'white'}
-            _hover={{
-              bg: '#c5904A',}}
-            >
-              Editar
-            </Button>
-            <Button size="sm" onClick={() => onDeleteCategory(index)}
-            bg={'red'}
-            color={'white'}
-            _hover={{
-              bg: '#c5904A',}}>
-              Delete
-            </Button>
-          </Box>
-        </ListItem>
-      ))}
-    </List>
+    <Box p="4">
+      <Heading as="h1" mb="4">
+        Lista de Categorias
+      </Heading>
+      <Flex align="center" mb="4">
+      <Box flex="1">
+          <Input
+            type="text"
+            placeholder="Pesquisar categoria por nome"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </Box>
+      </Flex>
+      {category &&(<CategoriesFinder categories={category} searchTerm={searchTerm} remover={removeCategory}/>)}
+    </Box>
   );
 };
 
-export default CategoryList;
+export default CategoryFilter;
