@@ -5,17 +5,20 @@ import Home from "../src/pages/Home";
 import ProductPage from "../src/pages/Products";
 
 import CategoryPage from "../src/pages/ProductList";
-import EditCategory from "../src/pages/EditCategory";
 import EditProductPage from "../src/pages/EditProduct";
-
+import Category from "../src/pages/Category";
+import ListCategory from "../src/pages/ListCategory";
+import EditCategory from "../src/pages/EditCategory";
 
 const router = createBrowserRouter([
     {path: '/home', element: <Home/>, errorElement: <NotFoundPage />},
     {path: '/', element: <Login/>, errorElement: <NotFoundPage />},
     {path: '/produtos', element: <ProductPage/>},
     {path: '/listarprodutos', element: <CategoryPage/>},
-    {path: '/categorias', element: <EditCategory/>},
     {path: '/editarprodutos/:id', element: <EditProductPage/>},
+    {path: '/categorias', element: <Category/>},
+    {path: '/listarcategorias', element: <ListCategory/>},
+    {path: '/editarcategorias/:id', element: <EditCategory />},
     {path: '/error', element: <NotFoundPage/>, errorElement: <NotFoundPage/>}
 
   ])
