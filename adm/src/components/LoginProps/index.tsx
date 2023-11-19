@@ -11,6 +11,9 @@ import {
 import { useState } from 'react'
 import { api } from '../../helpers/axios'
 import { useNavigate } from 'react-router-dom'
+import { useMutateLogin } from '../../hooks/mutations/login'
+import { response } from 'express';
+import { useToast } from '@chakra-ui/react';
 
  interface ILogin {
   email:string
@@ -22,27 +25,47 @@ export default function LoginProps() {
   const [inputEmail,setInputEmail] = useState('')
   const [inputPassword,setInputPassword] = useState('')
   const navigate = useNavigate();
+  const toast = useToast()
+
+  const {mutate: mutateLogin, isError, error } = useMutateLogin()
+  console.log("🚀 ~ file: index.tsx:29 ~ LoginProps ~ mutateLogin:", mutateLogin)
 
   function Login(){
+    console.log('entrou login')
+    
    if(inputEmail != '' && inputPassword != ''){
     const newLogin: ILogin = {
       email: inputEmail,
       password: inputPassword
     }
-   api.post('/auth',newLogin).then(response => {
-      setInputEmail('');
-      setInputPassword('');
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userId', response.data.user.id);
-      if(response.status == 200){
+    mutateLogin(newLogin, {
+      onSuccess: (response) => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('userId', response.user.id);
+        setInputEmail('');
+        setInputPassword('');
+        toast({
+          title: 'Login',
+          description: "Login efetuado com sucesso",
+          status: 'success',
+          duration: 1500,
+          isClosable: true,
+          position: 'top'
+        })
         navigate('/home')
-      }else{
+      },
+      onError: (error: any) => {
+        setInputPassword('');
+        toast({
+          title: 'Login',
+          description: "Senha ou Login incorreto",
+          status: 'error',
+          duration: 1500,
+          isClosable: true,
+          position: 'top'
+        })
       }
-    }).catch((erro)=>{
-      alert("Erro no login")
-      console.log(erro)
-    })
-   
+    })  
   } 
 }
 
@@ -57,7 +80,7 @@ export default function LoginProps() {
         spacing={4}
         w={'full'}
         maxW={'md'}
-        bg={useColorModeValue('white', '#7a5656')}
+        bg={useColorModeValue('white', 'white')}
         rounded={'xl'}
         boxShadow={'lg'}
         p={6}
@@ -68,20 +91,26 @@ export default function LoginProps() {
           src={'public/logo.png'}/>
 
         <FormControl id="email" isRequired>
-          <FormLabel>Usuário</FormLabel>
+          <FormLabel color={'blackAlpha.900'}>Usuário</FormLabel>
           <Input
+           border='1px solid #7a5656'
             value={inputEmail}
             onChange={(e) => setInputEmail(e.target.value)}
-            placeholder="insira o e-mail"
-            _placeholder={{ color: 'gray.500' }}
+            color='blackAlpha.900'
             type="email"
-          />
+            placeholder="insira o e-mail"
+            _placeholder={{color:'gray'}}
+            />
         </FormControl>
         <FormControl id="password" isRequired>
-          <FormLabel>Senha</FormLabel>
+          <FormLabel color={'blackAlpha.900'}>Senha</FormLabel>
           <Input type="password" 
+            color='blackAlpha.900'
+            border='1px solid #7a5656'
             value={inputPassword}
             onChange={(e) => setInputPassword(e.target.value)}
+            placeholder="insira a senha"
+            _placeholder={{color:'gray'}}
             />
         </FormControl>
         <Stack spacing={6}>
