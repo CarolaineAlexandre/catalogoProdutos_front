@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
     >
       <HStack justify="center" align="center">
       <Image
-          src="public/logo_rodape.png"
+          src={'/logo_rodape.png'}
           alt="Logo"
           width="100px"
           marginTop={'-15px'}

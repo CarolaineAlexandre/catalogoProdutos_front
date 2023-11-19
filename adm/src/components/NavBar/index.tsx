@@ -70,7 +70,7 @@ import {
             justifyContent={'center'} >
           
               <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
-              <Image maxWidth={'20vh'} src={'public/logo.png'}/>
+              <Image maxWidth={'20vh'} src={'/logo.png'}/>
                 {Links.map((link) => (
                   <Link to={link.href}> 
                   <NavLink key={link.texto}>{link.texto}</NavLink>

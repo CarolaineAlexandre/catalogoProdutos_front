@@ -16,6 +16,7 @@ import { useMutateProduct } from "../../hooks/mutations/products"
 import { useProductsById } from "../../hooks/queries/products"
 import { useParams } from "react-router-dom"
 import { api } from "../../helpers/axios"
+import LayoutProps from "../Layout"
 
 
 
