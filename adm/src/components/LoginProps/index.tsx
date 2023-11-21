@@ -84,7 +84,7 @@ export default function LoginProps() {
         
           <Image  maxWidth={'30vh'} 
           maxHeight={'30vh'} paddingStart={'50px'}
-          src={'public/logo.png'}/>
+          src={'logo.png'}/>
 
         <FormControl id="email" isRequired>
           <FormLabel color={'blackAlpha.900'}>Usuário</FormLabel>
