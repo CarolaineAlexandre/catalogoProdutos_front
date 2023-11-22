@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   Box,
+  Button,
   Flex,
   Heading,
   Input
@@ -10,6 +11,7 @@ import { useCategories } from "../../hooks/queries/category";
 import { useProducts } from "../../hooks/queries/products";
 import ProductsFinder from "../ProductsFinder";
 import { api } from "../../helpers/axios";
+import { useNavigate } from "react-router-dom";
 
 
 const ProductFilter = () => {
@@ -33,14 +35,40 @@ const ProductFilter = () => {
     });
   }
 
+  const navigate = useNavigate();
+
+  function goToNewProduct() {
+    navigate('/produtos')
+  } 
  
 
 
   return (
     <Box p="4">
-      <Heading as="h1" mb="4">
-        Lista de Produtos
-      </Heading>
+      <Flex alignItems={'center'}>
+
+          <Heading as="h1" mb="4">
+            Lista de Produtos
+          </Heading>
+
+
+          <Button  
+          ml={10}
+            bg={'#15b097'}
+            width={'200px'}
+            color={'white'}
+            _hover={{
+              bg: '#15b097',
+            }}
+            onClick={goToNewProduct}
+            >
+            <Flex>
+              Cadastrar
+            </Flex>
+          </Button>
+        </Flex>
+
+
       <Flex align="center" mb="4">
       <Box flex="1">
           <Input

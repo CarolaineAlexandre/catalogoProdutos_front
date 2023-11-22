@@ -63,6 +63,7 @@ function CategoryForm (){
     }
   }
 
+
   return (
     <Box borderWidth="1px" borderRadius="md" p={4}>
       <Text fontSize="xl" mb={4}>

@@ -25,7 +25,7 @@ export default function Products() {
         Cadastre, consulte ou edite categorias de produtos
         </Center>
         
-          <Link to={'/categorias'}>
+          <Link to={'/listarcategorias'}>
           <Stack spacing={6}>
           <Button
             bg={'#7a5656'}

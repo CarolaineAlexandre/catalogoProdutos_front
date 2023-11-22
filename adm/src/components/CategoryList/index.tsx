@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   Box,
+  Button,
   Flex,
   Heading,
   Input
@@ -8,6 +9,7 @@ import {
 import CategoriesFinder from "../CategoryFinder";
 import { api } from "../../helpers/axios";
 import { useCategories } from "../../hooks/queries/category";
+import { useNavigate } from "react-router-dom";
 
 
 const CategoryFilter = () => {
@@ -29,12 +31,41 @@ const CategoryFilter = () => {
       alert("Erro ao deletar a categoria. Por favor, tente novamente.");
     });
   }
+  
+  const navigate = useNavigate();
+  function goToNewCategory() {
+    navigate('/categorias')
+  } 
 
   return (
     <Box p="4">
-      <Heading as="h1" mb="4">
-        Lista de Categorias
-      </Heading>
+
+<Flex alignItems={'center'}>
+
+<Heading as="h1" mb="4">
+  Lista de Categorias
+</Heading>
+
+
+<Button  
+ml={10}
+  bg={'#15b097'}
+  width={'200px'}
+  color={'white'}
+  _hover={{
+    bg: '#15b097',
+  }}
+  onClick={goToNewCategory}
+  >
+  <Flex>
+    Cadastrar
+  </Flex>
+</Button>
+</Flex>
+
+
+
+
       <Flex align="center" mb="4">
       <Box flex="1">
           <Input
