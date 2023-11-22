@@ -3,6 +3,7 @@ import { Box, Button, Center, Input, Stack, Text } from '@chakra-ui/react';
 import { api } from '../../helpers/axios';
 import { useCreateCategory } from '../../hooks/mutations/category';
 
+
 function CategoryForm (){
   const [categoryName, setCategoryName] = useState('');
   const [categoryDescription, setCategoryDescription] = useState('');
