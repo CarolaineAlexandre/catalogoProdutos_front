@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Center, Input, Stack, Text } from '@chakra-ui/react';
-import { useCreateCategory } from '../../hooks/mutation/category';
 import { api } from '../../helpers/axios';
-
+import { useCreateCategory } from '../../hooks/mutations/category';
 
 function CategoryForm (){
   const [categoryName, setCategoryName] = useState('');
@@ -56,12 +55,13 @@ function CategoryForm (){
           setCategoryImage('')
           setUploadSucesso(true);
         },
-        onError:(erro) =>{
+        onError:(_erro) =>{
           alert("Erro ao criar categoria")
         }
       })
     }
   }
+
 
   return (
     <Box borderWidth="1px" borderRadius="md" p={4}>

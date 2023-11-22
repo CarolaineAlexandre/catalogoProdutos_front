@@ -19,8 +19,8 @@ import {
   
   const Links = [
       {href: '/home', texto: 'Home'},
-      {href: '/produtos', texto: 'Produtos'},
-      {href: '/categorias', texto: 'Categorias'},
+      {href: '/listarprodutos', texto: 'Produtos'},
+      {href: '/listarcategorias', texto: 'Categorias'},
   ]
   
   const NavLink = (props: Props) => {

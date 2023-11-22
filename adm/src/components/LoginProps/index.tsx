@@ -9,10 +9,8 @@ import {
   Image
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { api } from '../../helpers/axios'
 import { useNavigate } from 'react-router-dom'
 import { useMutateLogin } from '../../hooks/mutations/login'
-import { response } from 'express';
 import { useToast } from '@chakra-ui/react';
 
  interface ILogin {
@@ -27,7 +25,7 @@ export default function LoginProps() {
   const navigate = useNavigate();
   const toast = useToast()
 
-  const {mutate: mutateLogin, isError, error } = useMutateLogin()
+  const {mutate: mutateLogin } = useMutateLogin()
 
   function Login(){    
    if(inputEmail != '' && inputPassword != ''){
@@ -53,6 +51,7 @@ export default function LoginProps() {
       },
       onError: (error: any) => {
         setInputPassword('');
+        console.log(error)
         toast({
           title: 'Login',
           description: "Senha ou Login incorreto",
@@ -85,7 +84,7 @@ export default function LoginProps() {
         
           <Image  maxWidth={'30vh'} 
           maxHeight={'30vh'} paddingStart={'50px'}
-          src={'public/logo.png'}/>
+          src={'logo.png'}/>
 
         <FormControl id="email" isRequired>
           <FormLabel color={'blackAlpha.900'}>Usuário</FormLabel>
