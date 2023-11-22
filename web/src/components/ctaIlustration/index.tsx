@@ -44,7 +44,7 @@ export default function CtaIlustration() {
           maxHeight={'80vh'}
           alt={'velas aromáticas'}
           objectFit={'cover'}
-          src={'./public/img_home.png'}
+          src={'img_home.png'}
         />
       </Flex>
     </Stack>

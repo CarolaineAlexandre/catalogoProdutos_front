@@ -1,5 +1,4 @@
-import React from 'react';
-import { Heading, Grid, GridItem, Center, Text, Box, Flex, Card, Image } from '@chakra-ui/react';
+import { Heading, Grid, Text, Box, Flex, Card } from '@chakra-ui/react';
 import LayoutProps from '../../components/Layout2';
 import { useProductByCategory } from '../../hooks/queries/catalogCategory';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -21,7 +20,7 @@ export default function CategoryPage() {
   const { data: catalogList } = useProductByCategory(Number(category));
 
   const navigate = useNavigate();
-  const handleButtonClick = (id) => {
+  const handleButtonClick = (id:any) => {
     navigate(`/product/${id}`);
   };
   

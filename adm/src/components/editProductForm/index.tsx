@@ -12,11 +12,11 @@ import {
 
 import Category_dropdown from "../Category_dropdown"
 import { useCategories } from "../../hooks/queries/category"
-import { useMutateProduct } from "../../hooks/mutations/products"
+// import { useMutateProduct } from "../../hooks/mutations/products"
 import { useProductsById } from "../../hooks/queries/products"
 import { useParams } from "react-router-dom"
 import { api } from "../../helpers/axios"
-import LayoutProps from "../Layout"
+// import LayoutProps from "../Layout"
 
 
 
@@ -30,7 +30,7 @@ export default function EditProductForm() {
 
   const { data: product } = useProductsById(Number(id));
   const { data: category } = useCategories();
-  const { mutate: mutateProduct } = useMutateProduct();
+  // const { mutate: mutateProduct } = useMutateProduct();
 
   const [Id, setId] = useState(0);
   const [inputName, setInputName] = useState("");
@@ -88,6 +88,7 @@ export default function EditProductForm() {
         setUrlAws(response.data.urlPhotoAws);
       })
       .catch((error) => {
+        console.log(error)
         alert('Erro ao enviar a imagem');
       });
   };
@@ -115,7 +116,9 @@ export default function EditProductForm() {
 
           api.put(`/product/${id}`, novoProduto ).then(()=>{
             alert('Cadastro atualizado no codigo '+id)
-          }).catch((erro) => alert('Ocorreu um erro ao atualizar o produto!'))
+          }).catch((erro) => {
+            console.log(erro)
+            alert('Ocorreu um erro ao atualizar o produto!')})
 
         }
 

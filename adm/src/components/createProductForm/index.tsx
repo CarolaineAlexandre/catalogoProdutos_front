@@ -63,7 +63,7 @@ export default function ProductForm() {
       alert('Imagem enviada com sucesso:');
       setUrlAws(response.data.urlPhotoAws);
     })
-    .catch((error) => {
+    .catch((_error) => {
       alert('Erro ao enviar a imagem:');
     });
   };
@@ -114,6 +114,7 @@ export default function ProductForm() {
                 setUrl4('')
               },
               onError: error => {
+                console.log(error)
                 alert("Falha ao cadastrar o produto, por favor tente novamente!")
               }
             })
