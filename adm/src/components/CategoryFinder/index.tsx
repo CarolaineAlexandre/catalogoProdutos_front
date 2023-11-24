@@ -30,6 +30,7 @@ export default function CategoriesFinder({
         <li
           key={category.id}
           style={{
+            color: 'black',
             textDecoration: "none",
             display: "flex",
             alignItems: "center",
