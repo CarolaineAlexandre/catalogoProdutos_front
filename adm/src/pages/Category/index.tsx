@@ -20,8 +20,8 @@ function App() {
 
       <Box textAlign="center" p={4}>
         <CategoryForm  />
-      </Box>
-            </LayoutProps>
+          </Box>
+        </LayoutProps>
     </ChakraProvider>
   );
 }

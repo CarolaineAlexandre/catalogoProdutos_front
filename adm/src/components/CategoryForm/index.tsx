@@ -32,6 +32,7 @@ function CategoryForm (){
       .then((response) => {
         console.log('Imagem enviada com sucesso:', response.data);
         setUrlAws(response.data.urlPhotoAws)
+        console.log("🚀 ~ file: index.tsx:35 ~ .then ~ response.data.urlPhotoAws:", urlAws)
         setUploadSucesso(true);
       })
       .catch((error) => {
@@ -43,20 +44,21 @@ function CategoryForm (){
 
   function createCategory() {
     if (categoryName != '' && categoryDescription != ''){
+      
       const create = {
         name: categoryName,
         description: categoryDescription,
-        photo: urlAws
+        photo: urlAws 
       } 
       mutateCreateCategory(create,{
-        onSuccess:(data) => {
-          console.log(data)
+        onSuccess:(_data) => {
           setCategoryName('')
           setCategoryDescription('')
           setCategoryImage('')
           setUploadSucesso(true);
         },
-        onError:(_erro) =>{
+        onError:(erro) =>{
+          console.log(erro)
           alert("Erro ao criar categoria")
         }
       })

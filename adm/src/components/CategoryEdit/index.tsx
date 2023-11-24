@@ -10,7 +10,7 @@ import {
   Text
 } from "@chakra-ui/react";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCategoriesById } from "../../hooks/queries/category";
 import { api } from "../../helpers/axios";
 
@@ -56,7 +56,10 @@ export default function EditCategoryPage() {
       alert("Selecione uma imagem antes de enviar.");
     }
   };
-
+  const navigate = useNavigate();
+  function goToList() {
+    navigate('/listarcategorias')
+  } 
 
   const updateCategory = () => {
     if (categoryName !== "" && categoryDescription !== "") {
@@ -69,6 +72,7 @@ export default function EditCategoryPage() {
         .put(`/category/${id}`, update)
         .then(() => {
           alert("Cadastro atualizado no código " + id);
+          goToList();
         })
         .catch(() => {
           alert("Ocorreu um erro ao atualizar a categoria!");
