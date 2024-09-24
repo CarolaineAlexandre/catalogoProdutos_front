@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL:'https://api-catalogo-pi.onrender.com'
+    // baseURL:'http://localhost:3000'
+    baseURL:'https://api-catalogo-pi-1.onrender.com'
 })
 
 if(typeof window!== undefined){
