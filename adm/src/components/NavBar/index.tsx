@@ -21,6 +21,7 @@ import {
       {href: '/home', texto: 'Home'},
       {href: '/listarprodutos', texto: 'Produtos'},
       {href: '/listarcategorias', texto: 'Categorias'},
+      {href: '/pedidos', texto: 'Pedidos'},
   ]
   
   const NavLink = (props: Props) => {
@@ -60,9 +61,7 @@ import {
               icon={isOpen ? <AiOutlineClose /> : <GiHamburgerMenu />}
               aria-label={'Menu'}
               display={{ md: 'none' }}
-              onClick={isOpen ? onClose : onOpen}
-              
-
+              onClick={isOpen ? onClose : onOpen}         
             />
            
             <HStack spacing={6} alignItems={'flex-start'} 
@@ -77,13 +76,14 @@ import {
                   </Link>
                 ))}
                 {/* input para pesquisar conteúdo
-                <InputGroup size='md' >
-                <Input placeholder='O que você procura?' size='md' borderColor={'#7A5656'}/>
-                <InputRightElement width='4.5rem'>
-                    <SearchIcon  h='1.75rem'>
-                    </SearchIcon>
-                </InputRightElement>
-                </InputGroup>                 */}
+                  <InputGroup size='md' >
+                  <Input placeholder='O que você procura?' size='md' borderColor={'#7A5656'}/>
+                  <InputRightElement width='4.5rem'>
+                      <SearchIcon  h='1.75rem'>
+                      </SearchIcon>
+                  </InputRightElement>
+                  </InputGroup>                 
+                */}
               </HStack>
             </HStack>
           </Flex>
