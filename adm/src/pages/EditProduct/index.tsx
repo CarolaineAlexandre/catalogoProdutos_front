@@ -4,10 +4,6 @@ import LayoutProps from "../../components/Layout"
 import EditProductForm from "../../components/editProductForm/index.tsx";
 
   function ProductPage() {
-    
-
-
-
     return (
         <>
         <LayoutProps>

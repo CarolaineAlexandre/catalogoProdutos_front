@@ -4,7 +4,8 @@ import {
   Button,
   Flex,
   Heading,
-  Input
+  Input,
+  useToast
 } from "@chakra-ui/react";
 import Category_dropdown from "../Category_dropdown";
 import { useCategories } from "../../hooks/queries/category";
@@ -17,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 const ProductFilter = () => {
   const [selectCategory, setSelectCategory] = useState(0)
   const [searchTerm, setSearchTerm] = useState("");
+  const toast = useToast()
 
   const { data: category } = useCategories()
   const { data: product,
@@ -27,11 +29,27 @@ const ProductFilter = () => {
   function removerProduto(id: number) {
     api.delete(`/product/${id}`).then(() => {
       refetchProdutos();
-      alert("Produto código " + id + " deletado com sucesso!");
+      // alert("Produto código " + id + " deletado com sucesso!");
+      toast({
+        title: 'Produto',
+        description: "Produto deletado com sucesso",
+        status: 'success',
+        duration: 1500,
+        isClosable: true,
+        position: 'top'
+      })
     })
     .catch((error) => {
       console.error("Erro ao deletar produto:", error);
-      alert("Erro ao deletar o produto. Por favor, tente novamente.");
+      // alert("Erro ao deletar o produto. Por favor, tente novamente.");
+      toast({
+        title: 'Produto',
+        description: "Erro ao deletar o produto",
+        status: 'error',
+        duration: 1500,
+        isClosable: true,
+        position: 'top'
+      })
     });
   }
 

@@ -4,7 +4,8 @@ import {
   Button,
   Flex,
   Heading,
-  Input
+  Input,
+  useToast
 } from "@chakra-ui/react";
 import CategoriesFinder from "../CategoryFinder";
 import { api } from "../../helpers/axios";
@@ -14,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 const CategoryFilter = () => {
   const [searchTerm, setSearchTerm] = useState("");
-
+  const toast = useToast()
   const { data: category,
     refetch: refetchCategories
    } = useCategories()
@@ -24,11 +25,27 @@ const CategoryFilter = () => {
     console.log(id)
     api.delete(`/category/${id}`).then(() => {
       refetchCategories();
-      alert("A categoria de código " + id + " foi deletada com sucesso!");
+      // alert("A categoria de código " + id + " foi deletada com sucesso!");
+      toast({
+        title: 'Categoria',
+        description: "A categoria de código " + id + " foi deletada com sucesso!",
+        status: 'success',
+        duration: 1500,
+        isClosable: true,
+        position: 'top'
+      })
     })
     .catch((error) => {
       console.error("Erro ao deletar categoria:", error);
-      alert("Erro ao deletar a categoria. Por favor, tente novamente.");
+      // alert("Erro ao deletar a categoria. Por favor, tente novamente.");
+      toast({
+        title: 'Categoria',
+        description: "Erro ao deletar a categoria. Por favor, tente novamente.",
+        status: 'error',
+        duration: 1500,
+        isClosable: true,
+        position: 'top'
+      })
     });
   }
   

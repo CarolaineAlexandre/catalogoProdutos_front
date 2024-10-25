@@ -8,6 +8,7 @@ import {
   Checkbox,
   Grid,
   GridItem,
+  useToast,
 } from "@chakra-ui/react"
 
 import Category_dropdown from "../Category_dropdown"
@@ -17,6 +18,8 @@ import { api } from "../../helpers/axios"
 
 
 export default function ProductForm() {
+
+  const toast = useToast()
 
   const { data: category } = useCategories()
 
@@ -47,7 +50,15 @@ export default function ProductForm() {
 
   const handleUpload = (photo: File | null, setUrlAws: React.Dispatch<React.SetStateAction<string>>) => {
     if (!photo) {
-      alert('Nenhuma foto fornecida para upload.');
+      // alert('Nenhuma foto fornecida para upload.');
+      toast({
+        title: 'Imagem',
+        description: "Nenhuma imagem fornecida",
+        status: 'warning',
+        duration: 1500,
+        isClosable: true,
+        position: 'top'
+      })
       return;
     }
   
@@ -60,11 +71,27 @@ export default function ProductForm() {
       },
     })
     .then((response) => {
-      alert('Imagem enviada com sucesso:');
+      // alert('Imagem enviada com sucesso:');
+      toast({
+        title: 'Imagem',
+        description: "Imagem enviada com sucesso",
+        status: 'success',
+        duration: 1500,
+        isClosable: true,
+        position: 'top'
+      })
       setUrlAws(response.data.urlPhotoAws);
     })
     .catch((_error) => {
-      alert('Erro ao enviar a imagem:');
+      // alert('Erro ao enviar a imagem:');
+      toast({
+        title: 'Imagem',
+        description: "Falha ao enviar imagem",
+        status: 'error',
+        duration: 1500,
+        isClosable: true,
+        position: 'top'
+      })
     });
   };
 
@@ -95,7 +122,15 @@ export default function ProductForm() {
             mutateProduct(novoProduto, {
               onSuccess: response => {
                 const produtoId = response.id
-                alert('Produto cadastrado com sucesso no codigo ' + produtoId)
+                // alert('Produto cadastrado com sucesso no codigo ' + produtoId)
+                toast({
+                  title: 'Produto',
+                  description: "Produto cadastrado com sucesso no código" + produtoId,
+                  status: 'success',
+                  duration: 1500,
+                  isClosable: true,
+                  position: 'top'
+                })
                 selectCategory
                 setInputName('')
                 setInputDescription('')
@@ -115,28 +150,68 @@ export default function ProductForm() {
               },
               onError: error => {
                 console.log(error)
-                alert("Falha ao cadastrar o produto, por favor tente novamente!")
+                // alert("Falha ao cadastrar o produto, por favor tente novamente!")
+                toast({
+                  title: 'Produto',
+                  description: "falha ao cadastrar o produto, tente novamente",
+                  status: 'error',
+                  duration: 1500,
+                  isClosable: true,
+                  position: 'top'
+                })
               }
             })
           }
           else {
-            alert("É necessário salvar fotos para o produto!")
+            // alert("É necessário salvar fotos para o produto!")
+            toast({
+              title: 'Imagem',
+              description: "É necessario salvar a imagem para o produto ",
+              status: 'warning',
+              duration: 1500,
+              isClosable: true,
+              position: 'top'
+            })
           }
         }
 
         else {
-          alert("Por favor informe um preço válido!")
+          // alert("Por favor informe um preço válido!")
+          toast({
+            title: 'Preço',
+            description: "Insira um preço válido",
+            status: 'warning',
+            duration: 1500,
+            isClosable: true,
+            position: 'top'
+          })
         }
       }
       else {
-        alert("Por favor selecione uma categoria para o produto!")
+        // alert("Por favor selecione uma categoria para o produto!")
+        toast({
+          title: 'Categoria',
+          description: "Escolha uma categoria para o produto",
+          status: 'warning',
+          duration: 1500,
+          isClosable: true,
+          position: 'top'
+        })
       }
 
 
     }
 
     else {
-      alert("Por favor preencha todos os campos")
+      // alert("Por favor preencha todos os campos")
+      toast({
+        title: 'Campos',
+        description: "Preencha todos os campos",
+        status: 'warning',
+        duration: 1500,
+        isClosable: true,
+        position: 'top'
+      })
     }
   }
 
