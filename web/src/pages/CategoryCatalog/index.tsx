@@ -14,31 +14,30 @@ interface ICategory {
   photo3: string;
   photo4: string;
 }
-
 export default function CategoryPage() {
   const { category } = useParams();
   const { data: catalogList } = useProductByCategory(Number(category));
 
   const navigate = useNavigate();
-  const handleButtonClick = (id:any) => {
+  const handleButtonClick = (id: any) => {
     navigate(`/product/${id}`);
   };
-  
+
   return (
     <LayoutProps>
       <Box padding="20px">
         <Heading color="#c5904A" as="h3" size="lg" mb="20px">
           catálogo/categoria/{category}
         </Heading>
-        {!catalogList ? (
+        {(!catalogList || !Array.isArray(catalogList)) ? ( // Check if catalogList is an array
           <Text>Não há produtos nessa categoria</Text>
         ) : (
           <Grid templateColumns="repeat(1, 1fr)" gap={5}>
             {catalogList.map((catalog: ICategory) => (
-              <Card key={catalog.id} onClick={() => {handleButtonClick(catalog.id)}}>
+              <Card key={catalog.id} onClick={() => { handleButtonClick(catalog.id); }}>
                 <Flex flexDirection="column">
                   <Box mt="20px" display="flex" alignItems="center">
-                  <Carousel
+                    <Carousel
                       photo1={catalog.photo1}
                       photo2={catalog.photo2}
                       photo3={catalog.photo3}
