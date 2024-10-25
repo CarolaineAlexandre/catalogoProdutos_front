@@ -8,6 +8,7 @@ import {
   Checkbox,
   Grid,
   GridItem,
+  useToast,
 } from "@chakra-ui/react"
 
 import Category_dropdown from "../Category_dropdown"
@@ -25,8 +26,10 @@ import { api } from "../../helpers/axios"
 export default function EditProductForm() {
 
   const { id } = useParams()
-  console.log("Teste" + id)
-  console.log(typeof (id))
+  // console.log("Teste" + id)
+  // console.log(typeof (id))
+  const toast = useToast()
+
 
   const { data: product } = useProductsById(Number(id));
   const { data: category } = useCategories();
@@ -58,7 +61,7 @@ export default function EditProductForm() {
 
 
 
-  console.log(product)
+  // console.log(product)
 
   const [photo1, setPhoto1] = useState<File | null>(null)
   const [photo2, setPhoto2] = useState<File | null>(null)
@@ -71,7 +74,15 @@ export default function EditProductForm() {
 
   const handleUpload = (photo: File | null, setUrlAws: React.Dispatch<React.SetStateAction<string>>) => {
     if (!photo) {
-      alert('Nenhuma foto fornecida para upload.');
+      // alert('Nenhuma foto fornecida para upload.');
+      toast({
+        title: 'Imagem',
+        description: "É necessario salvar a imagem para o produto ",
+        status: 'warning',
+        duration: 1500,
+        isClosable: true,
+        position: 'top'
+      })
       return;
     }
 
@@ -84,12 +95,28 @@ export default function EditProductForm() {
       },
     })
       .then((response) => {
-        alert('Imagem enviada com sucesso');
+        // alert('Imagem enviada com sucesso');
+        toast({
+          title: 'Imagem',
+          description: "Imagem enviada com sucesso",
+          status: 'success',
+          duration: 1500,
+          isClosable: true,
+          position: 'top'
+        })
         setUrlAws(response.data.urlPhotoAws);
       })
       .catch((error) => {
         console.log(error)
-        alert('Erro ao enviar a imagem');
+        // alert('Erro ao enviar a imagem');
+        toast({
+          title: 'Imagem',
+          description: "Erro ao enviar a imagem",
+          status: 'error',
+          duration: 1500,
+          isClosable: true,
+          position: 'top'
+        })
       });
   };
 
@@ -115,26 +142,67 @@ export default function EditProductForm() {
           }
 
           api.put(`/product/${id}`, novoProduto ).then(()=>{
-            alert('Cadastro atualizado no codigo '+id)
+            // alert('Cadastro atualizado no codigo '+id)
+            toast({
+              title: 'Produto',
+              description: "Produto atualizado no código " + id,
+              status: 'success',
+              duration: 1500,
+              isClosable: true,
+              position: 'top'
+            })
           }).catch((erro) => {
             console.log(erro)
-            alert('Ocorreu um erro ao atualizar o produto!')})
+            // alert('Ocorreu um erro ao atualizar o produto!')
+            toast({
+              title: 'Produto',
+              description: "Erro ao atualizar produto",
+              status: 'error',
+              duration: 1500,
+              isClosable: true,
+              position: 'top'
+            })
+          })
 
         }
 
         else {
-          alert("Por favor informe um preço válido!")
+          // alert("Por favor informe um preço válido!")
+          toast({
+            title: 'Preço',
+            description: "Insira um preço válido",
+            status: 'warning',
+            duration: 1500,
+            isClosable: true,
+            position: 'top'
+          })
         }
       }
       else {
-        alert("Por favor selecione uma categoria para o produto!")
+        // alert("Por favor selecione uma categoria para o produto!")
+        toast({
+          title: 'Categoria',
+          description: "Insira uma categoria para o produto",
+          status: 'warning',
+          duration: 1500,
+          isClosable: true,
+          position: 'top'
+        })
       }
 
 
     }
 
     else {
-      alert("Por favor preencha todos os campos")
+      // alert("Por favor preencha todos os campos")
+      toast({
+        title: 'Campos',
+        description: "Preencha todos os campos",
+        status: 'warning',
+        duration: 1500,
+        isClosable: true,
+        position: 'top'
+      })
     }
   }
 

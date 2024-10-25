@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Center, Input, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Input, Stack, Text, useToast } from '@chakra-ui/react';
 import { api } from '../../helpers/axios';
 import { useCreateCategory } from '../../hooks/mutations/category';
 
@@ -10,6 +10,7 @@ function CategoryForm (){
   const [categoryImage, setCategoryImage] = useState('');
   const [urlAws, setUrlAws] = useState('');
   const [uploadSucesso, setUploadSucesso] = useState(false);
+  const toast = useToast()
 
   const handleCategoryNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCategoryName(event.target.value);
@@ -59,7 +60,15 @@ function CategoryForm (){
         },
         onError:(erro) =>{
           console.log(erro)
-          alert("Erro ao criar categoria")
+          // alert("Erro ao criar categoria")
+          toast({
+            title: 'Categoria',
+            description: "Erro ao criar categoria",
+            status: 'error',
+            duration: 1500,
+            isClosable: true,
+            position: 'top'
+          })
         }
       })
     }

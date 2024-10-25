@@ -7,7 +7,8 @@ import {
   Button,
   Grid,
   GridItem,
-  Text
+  Text,
+  useToast
 } from "@chakra-ui/react";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,7 +18,7 @@ import { api } from "../../helpers/axios";
 export default function EditCategoryPage() {
   const { id } = useParams();
   const { data: category } = useCategoriesById(Number(id));
-
+  const toast = useToast()
   const [Id, setCategoryId] = useState(0);
   const [categoryName, setCategoryName] = useState("");
   const [categoryDescription, setCategoryDescription] = useState("");
@@ -47,13 +48,37 @@ export default function EditCategoryPage() {
           },
         });
 
-        alert("Imagem enviada com sucesso");
+        // alert("Imagem enviada com sucesso");
+        toast({
+          title: 'Imagem',
+          description: "Imagem enviada com sucesso",
+          status: 'success',
+          duration: 1500,
+          isClosable: true,
+          position: 'top'
+        })
         setUrl1(response.data.urlPhotoAws);
       } catch (error) {
-        alert("Erro ao enviar a imagem");
+        // alert("Erro ao enviar a imagem");
+        toast({
+          title: 'Imagem',
+          description: "Erro ao enviar imagem",
+          status: 'error',
+          duration: 1500,
+          isClosable: true,
+          position: 'top'
+        })
       }
     } else {
-      alert("Selecione uma imagem antes de enviar.");
+      // alert("Selecione uma imagem antes de enviar.");
+      toast({
+        title: 'Imagem',
+        description: "Selecione uma imagem antes de enviar.",
+        status: 'warning',
+        duration: 1500,
+        isClosable: true,
+        position: 'top'
+      })
     }
   };
   const navigate = useNavigate();
@@ -71,14 +96,39 @@ export default function EditCategoryPage() {
       api
         .put(`/category/${id}`, update)
         .then(() => {
-          alert("Cadastro atualizado no código " + id);
+          // alert("Cadastro atualizado no código " + id);
+          toast({
+            title: 'Categoria',
+            description: "Cadastro atualizado no código " + id,
+            status: 'success',
+            duration: 1500,
+            isClosable: true,
+            position: 'top'
+          })
           goToList();
         })
         .catch(() => {
           alert("Ocorreu um erro ao atualizar a categoria!");
+          toast({
+            title: 'Categoria',
+            description: "Erro ao atualizar a categoria",
+            status: 'error',
+            duration: 1500,
+            isClosable: true,
+            position: 'top'
+          })
+          
         });
     } else {
-      alert("Por favor, preencha todos os campos.");
+      // alert("Por favor, preencha todos os campos.");
+      toast({
+        title: 'Categoria',
+        description: "Preencha todos os campos",
+        status: 'warning',
+        duration: 1500,
+        isClosable: true,
+        position: 'top'
+      })
     }
   };
 
