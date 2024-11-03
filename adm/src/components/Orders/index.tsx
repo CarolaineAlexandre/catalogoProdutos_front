@@ -199,7 +199,7 @@ const Orders = () => {
     const status = { status: next_step };
 
     try {
-      const response = await fetch(`http://localhost:3000/order/${id}`, {
+      const response = await fetch(`https://api-catalogo-pi-1.onrender.com/order/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -224,7 +224,7 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('http://localhost:3000/order');
+        const response = await fetch('https://api-catalogo-pi-1.onrender.com/order');
         const data = await response.json();
         setOrders(data);
         console.log('data => ', data);
